@@ -1,0 +1,18 @@
+plugins {
+  id("application")
+}
+repositories {
+  mavenCentral()
+}
+dependencies {
+  implementation("com.slack.api:bolt-jetty:1.1.0")
+  implementation("org.slf4j:slf4j-simple:1.7.30")
+  implementation("com.slack.api:slack-api-client:1.1.0")
+}
+application {
+  mainClassName = "hello.MyApp"
+}
+run {
+  // gradle run -DslackLogLevel=debug
+  systemProperty "org.slf4j.simpleLogger.log.com.slack.api", System.getProperty("slackLogLevel")
+}
