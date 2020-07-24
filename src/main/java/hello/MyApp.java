@@ -2,6 +2,7 @@ package hello;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.jetty.SlackAppServer;
 import hello.ConversationTest;
+import hello.GameDriver;
 
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.response.chat.ChatGetPermalinkResponse;
@@ -12,18 +13,76 @@ import com.slack.api.model.event.MessageEvent;
 import java.util.regex.Pattern;
 
 public class MyApp {
+
+
   public static void main(String[] args) throws Exception {
     // App expects env variables (SLACK_BOT_TOKEN, SLACK_SIGNING_SECRET)
     try{
     App app = new App();
+    GameDriver game = new GameDriver();
+    
+    //check for all msgs
+    Pattern sdk = Pattern.compile(".*", Pattern.CASE_INSENSITIVE);
+    app.message(sdk, (payload, ctx) -> {
+      try{
+        //parse JSON for msg text
+        MessageEvent event = payload.getEvent();
+        String text = event.getText();
 
+        //initialize game
+        if(game.getStep() == 0 && text.contains("start game"))
+        {
+          String chan = event.getChannel();
+          System.out.println("Step 0");
+          game.begin(chan);
+        }
 
-    app.command("/hello", (req, ctx) -> {
-      return ctx.ack(":wave: Hello!");
+        //opt in phase
+        if(game.getStep() == 1  && text.contains("opt-in"))
+        {
+          System.out.println("Player added");
+          String playerId = event.getUser();
+          game.addPlayer(playerId);
+        }
+        //begin 
+        if(game.getStep() == 1  && text.contains("ready"))
+        {
+          game.startTurnPhase();
+        }
+        if(game.getStep() == 2)
+        {
+          
+        }
+        if(game.getStep() == 3)
+        {
+          
+        }
+        if(game.getStep() == 4)
+        {
+          
+        }
+        if(game.getStep() == 5)
+        {
+          
+        }
+        if(text.contains("restart"))
+        {
+          String chan = event.getChannel();
+          game.resetGame();
+        }
+        System.out.println("all steps "+ game.getStep() + text);
+      }
+      catch(Exception e)
+      {
+        System.out.println("oofs");
+      }
+      return ctx.ack();
     });
-
-
-    Pattern sdk = Pattern.compile("sup|start", Pattern.CASE_INSENSITIVE);
+    
+    /*app.command("/hello", (req, ctx) -> {
+      return ctx.ack(":wave: Hello!");
+    });*/
+    /*Pattern sdk = Pattern.compile("sup|start", Pattern.CASE_INSENSITIVE);
     app.message(sdk, (payload, ctx) -> {
         ConversationTest temp = new ConversationTest();
         try{
@@ -38,7 +97,7 @@ public class MyApp {
             System.out.println("oof");
         }
         return ctx.ack();
-      });
+      });*/
 
       /*app.message("start", (payload, ctx) -> {
         System.out.println("Starting");

@@ -13,6 +13,14 @@ import com.slack.api.methods.response.api.ApiTestResponse;
 
 public class ConversationTest {
 
+    public boolean phase = false;
+
+  public void setPhase()
+  {
+    phase = true;
+    System.out.println(true);
+  }
+
     public void Convo(String ident) throws Exception {
 
             Slack slack = Slack.getInstance();
@@ -36,14 +44,21 @@ public class ConversationTest {
 
     public void breakerTest()
     {
+        try{
         App app = new App();
-        String cont = "a";
         app.message("vibin", (payload, ctx) -> {
-
+            System.out.println("yoooooo");
             return ctx.ack();
           });
         System.out.println("After vibes");
 
+        }
+        catch(Exception e)
+        {
+            System.out.println("yikeroni");
+        }
+    }
+
 
     }
-}
+
