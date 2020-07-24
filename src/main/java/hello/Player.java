@@ -5,6 +5,7 @@ import java.io.*;
 public class Player {
     public String id;
     public boolean spy;
+    public int voteScheme;
 
     Player(String code)
     {
@@ -26,6 +27,14 @@ public class Player {
     public boolean isSpy()
     {
         return spy;
+    }
+    public void setVoteScheme(int num)
+    {
+        voteScheme = num;
+    }
+    public int getVoteScheme()
+    {
+        return voteScheme;
     }
 
 }

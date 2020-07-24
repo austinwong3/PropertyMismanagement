@@ -1,8 +1,8 @@
-hello/ConversationTest.java
- hello.ConversationTest
-hello/Player.java
- hello.Player
 hello/MyApp.java
  hello.MyApp
+hello/Player.java
+ hello.Player
+hello/ConversationTest.java
+ hello.ConversationTest
 hello/GameDriver.java
  hello.GameDriver

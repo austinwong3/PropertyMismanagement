@@ -28,6 +28,7 @@ public class MyApp {
         //parse JSON for msg text
         MessageEvent event = payload.getEvent();
         String text = event.getText();
+        
 
         //initialize game
         if(game.getStep() == 0 && text.contains("start game"))
@@ -38,43 +39,51 @@ public class MyApp {
         }
 
         //opt in phase
-        if(game.getStep() == 1  && text.contains("opt-in"))
+        else if(game.getStep() == 1  && text.contains("opt-in"))
         {
           System.out.println("Player added");
           String playerId = event.getUser();
           game.addPlayer(playerId);
         }
         //begin 
-        if(game.getStep() == 1  && text.contains("ready"))
+        else if(game.getStep() == 1  && text.contains("ready"))
         {
           game.startTurnPhase();
         }
-        if(game.getStep() == 2)
+        else if(game.getStep() == 2 && text.contains("<"))
         {
-          
+          game.addTeamMember(text);
         }
-        if(game.getStep() == 3)
+        else if(game.getStep() == 3 && (text.contains("1") || text.contains("0")) && !text.contains("<"))
         {
-          
+          System.out.println("entered voting");
+          game.castTeamVote(text);
         }
-        if(game.getStep() == 4)
+        else if(game.getStep() == 4 && (text.contains("1") || text.contains("0")) && !text.contains("<"))
         {
-          
+          String playerId = event.getUser();
+          game.castPRVote(text, playerId);
         }
-        if(game.getStep() == 5)
+        else if(game.getStep() == 5 && text.contains("end"))
         {
-          
+          game.resetGame();
         }
-        if(text.contains("restart"))
+        else if(game.getStep() == 5 && text.contains("again"))
+        {
+          String chan = event.getChannel();
+          game.resetGame();
+          game.begin(chan);
+        }
+        else if(text.contains("restart"))
         {
           String chan = event.getChannel();
           game.resetGame();
         }
-        System.out.println("all steps "+ game.getStep() + text);
+        System.out.println("all steps "+ game.getStep() + " " + text);
       }
       catch(Exception e)
       {
-        System.out.println("oofs");
+        System.out.println(e);
       }
       return ctx.ack();
     });
